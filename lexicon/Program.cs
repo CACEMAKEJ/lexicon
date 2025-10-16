@@ -17,6 +17,9 @@ builder.Services.AddScoped<DetectLanguageService>(sp =>
     return new DetectLanguageService(apiKey);
 });
 
+builder.Services.AddScoped<lexicon.Components.Services.TranslationService>(); 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

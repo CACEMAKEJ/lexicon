@@ -1,6 +1,7 @@
 @page "/translate"
 @using lexicon.Components.Services
 @inject DetectLanguageService LanguageDetector
+@inject TranslationService Translator 
 @rendermode InteractiveServer
 
 
@@ -47,29 +48,19 @@
 
     private async Task DetectAndTranslate()
     {
-        Console.WriteLine($"[Translate] - Button clicked. Input length: {inputText.Length}");
-        
         if (string.IsNullOrWhiteSpace(inputText))
         {
             detectionResult = "Please enter text to translate.";
             translationResult = "";
             StateHasChanged();
-            Console.WriteLine("[Translate] - Input is empty, showing prompt message.");
             return;
         }
 
         detectionResult = "Detecting...";
         translationResult = "";
         StateHasChanged(); 
-        
-        Console.WriteLine("[Translate] - State set to 'Detecting...'. Calling service now.");
-
 
         string languageCode = await LanguageDetector.DetectLanguageAsync(inputText);
-
-
-        Console.WriteLine($"[Translate] - Service returned language code: {languageCode ?? "NULL"}");
-
 
         if (string.IsNullOrEmpty(languageCode)) {
             detectionResult = "Could not detect language. (Check DL_KEY and server console for errors.)";
@@ -83,9 +74,12 @@
         if (languageCode == "en") {
             translationResult = "Text is already in English.";
         }
-        else
-        {
-            translationResult = $"TODO: Call translation service to translate text from '{languageCode}' to 'en'.";
+        else {
+            translationResult = "Translating...";
+            StateHasChanged(); 
+            string translatedText = await Translator.TranslateAsync(inputText, languageCode, "en");
+
+            translationResult = translatedText;
         }
         
         StateHasChanged();
