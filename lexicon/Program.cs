@@ -1,10 +1,21 @@
 using lexicon.Components;
+using dotenv.net;
+using lexicon.Components.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+DotEnv.Load();
+
+var apiKey = Environment.GetEnvironmentVariable("DL_KEY");
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddScoped<DetectLanguageService>(sp =>
+{
+    return new DetectLanguageService(apiKey);
+});
 
 var app = builder.Build();
 
