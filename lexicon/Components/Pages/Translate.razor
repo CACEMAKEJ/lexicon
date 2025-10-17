@@ -1,4 +1,4 @@
-@page "/translate"
+@page "/"
 @using lexicon.Components.Services
 @inject DetectLanguageService LanguageDetector
 @inject TranslationService Translator 
@@ -9,23 +9,22 @@
 
 <div class="container mx-auto p-4 max-w-2xl">
     <h1 class="text-3xl font-bold mb-4">Multilingual Translator</h1>
-
-    <div class="mb-4">
-        <textarea class="form-control w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                  @bind="inputText" 
-                  rows="6" 
-                  placeholder="Type or paste text here...">
-        </textarea>
+    
+    <div class="translatorTextField">
+        <input @bind="inputText" type="text" placeholder="What would you like to translate?" />
+        <div class="line"></div>
     </div>
 
-    <button class="btn btn-primary bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out" 
-            @onclick="DetectAndTranslate">
-        Detect and Translate
-    </button>
+    <div class="py-4">
+        <button class="btn btn-primary bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition duration-150 ease-in-out" 
+                @onclick="DetectAndTranslate">
+            Detect and Translate
+        </button>
+    </div>
 
     @if (!string.IsNullOrEmpty(detectionResult))
     {
-        <div class="mt-4 p-4 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
+        <div class="mt-4 border-l-4 border-blue-500 bg-blue-50 rounded-r-lg">
             <p class="text-lg">
                 <strong>Detection:</strong> <span class="font-mono text-blue-700">@detectionResult</span>
             </p>
@@ -33,7 +32,7 @@
     }
     @if (!string.IsNullOrEmpty(translationResult))
     {
-        <div class="mt-4 p-4 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
+        <div class="mt-4 border-l-4 border-green-500 bg-green-50 rounded-r-lg">
             <p class="text-lg">
                 <strong>Translation:</strong> <span class="text-green-700">@translationResult</span>
             </p>
