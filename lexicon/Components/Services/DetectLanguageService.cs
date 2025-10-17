@@ -5,8 +5,7 @@ public class  DetectLanguageService {
     private readonly DetectLanguageClient _client;   
 
     public DetectLanguageService(string apiKey) {
-        Console.WriteLine(apiKey);
-
+        
         if (string.IsNullOrEmpty(apiKey)) {
             Console.WriteLine("DL_KEY missing. Translation will not work.");
         }
