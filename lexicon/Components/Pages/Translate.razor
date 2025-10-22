@@ -12,7 +12,7 @@
     <h1 class="lexicon-heading font-bold mb-4" style="text-align: center; color: rgba(255, 255, 255, 1)">lexicon</h1>
     
     <div class="translatorTextField pt-5">
-        <input @bind="inputText" @oninput="HandleInput" type="text" placeholder="What would you like to translate?" />
+        <input @bind="inputText" type="text" placeholder="What would you like to translate?" />
         <div class="line"></div>
     </div>
 
@@ -47,23 +47,6 @@
     private string? detectionResult;  
     private string? translationResult; 
     
-    private System.Timers.Timer? debounceTimer;
-
-    private async void HandleInput(ChangeEventArgs e)
-    {
-        inputText = e.Value?.ToString();
-
-        debounceTimer?.Stop();
-        debounceTimer = new System.Timers.Timer(1000); // 1 second debounce
-        debounceTimer.Elapsed += async (_, _) =>
-        {
-            debounceTimer?.Stop();
-            await InvokeAsync(DetectAndTranslate);
-        };
-        debounceTimer.AutoReset = false;
-        debounceTimer.Start();
-    }
-
     private async Task DetectAndTranslate()
     {
         if (string.IsNullOrWhiteSpace(inputText))
