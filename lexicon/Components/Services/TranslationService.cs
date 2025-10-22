@@ -1,3 +1,4 @@
+using lexicon.Components.Data;
 using Newtonsoft.Json;
 using RestSharp;
 
@@ -25,9 +26,12 @@ public class TranslationResponse {
 
 public class TranslationService {
         private readonly RestClient _client;
+        private readonly ITranslationRepo _repo;
+
         private const string ApiBaseUrl = "https://ftapi.pythonanywhere.com/";
 
-        public TranslationService() {
+        public TranslationService(ITranslationRepo repo) {
+            _repo = repo;
             var options = new RestClientOptions(ApiBaseUrl);
             _client = new RestClient(options);
         }
@@ -49,6 +53,16 @@ public class TranslationService {
                         JsonConvert.DeserializeObject<TranslationResponse>(receivedJson);
 
                     if (translationResult != null && !string.IsNullOrWhiteSpace(translationResult.TranslatedText)) {
+                        var record = new TranslationRecord
+                        {
+                            OriginalText = textToTranslate.Trim(),
+                            TranslatedText = translationResult.TranslatedText.Trim(),
+                            SourceLanguage = sourceLang.Trim(),
+                            TargetLanguage = targetLang.Trim()
+                        };
+
+                        await _repo.SaveAsync(record);
+
                         return translationResult.TranslatedText;
                     }
 

@@ -1,5 +1,6 @@
 using lexicon.Components;
 using dotenv.net;
+using lexicon.Components.Data;
 using lexicon.Components.Services;
 
 
@@ -8,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 DotEnv.Load();
 
 var apiKey = Environment.GetEnvironmentVariable("DL_KEY");
+var mongoUri = Environment.GetEnvironmentVariable("MONGO_DB_URI");
+
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -17,8 +20,16 @@ builder.Services.AddScoped<DetectLanguageService>(sp =>
     return new DetectLanguageService(apiKey);
 });
 
-builder.Services.AddScoped<lexicon.Components.Services.TranslationService>(); 
+builder.Services.AddSingleton<ITranslationRepo>(sp =>
+{
+    return new MongoTranslationRepo(mongoUri);
+});
 
+builder.Services.AddScoped<TranslationService>(sp =>
+{
+    var repo = sp.GetRequiredService<ITranslationRepo>();
+    return new TranslationService(repo);
+});
 
 var app = builder.Build();
 
@@ -31,7 +42,6 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 
 app.UseAntiforgery();
 
