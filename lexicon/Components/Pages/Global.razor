@@ -6,25 +6,20 @@
     <h2 style="color: white;">Global Translation History</h2>
     <select @onchange="FilterByLanguage">
         <option value="">-- Filter by language --</option>
-        @foreach (var lang in languages)
-        {
+        @foreach (var lang in languages) {
             <option value="@lang">@lang</option>
         }
     </select>
 
-    @if (translations == null)
-    {
+    @if (translations == null) {
         <p style="color: white;">Loading...</p>
     }
-    else if (translations.Count == 0)
-    {
+    else if (translations.Count == 0) {
         <p>No translations yet.</p>
     }
-    else
-    {
+    else {
         <ul class="px-2" style="list-style-type: none;">
-            @foreach (var t in translations)
-            {
+            @foreach (var t in translations) {
                 <div class="mt-2 p-4" style="background-color:#2f3542; border-radius:14px; border:1px solid #3f4654; color:white; box-shadow:0 4px 14px rgba(0,0,0,0.4);">
                     <li >
                         <b style="color: white;">@t.SourceLanguage → @t.TargetLanguage:</b>
@@ -42,14 +37,12 @@
     private List<string> languages = new();
     private string selectedLanguage = "";
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() {
         translations = await Repo.GetRecentAsync(50);
         languages = translations.Select(t => t.SourceLanguage).Distinct().ToList();
     }
 
-    private async Task FilterByLanguage(ChangeEventArgs e)
-    {
+    private async Task FilterByLanguage(ChangeEventArgs e) {
         selectedLanguage = e.Value?.ToString()?.Trim().ToLower();
 
         if (string.IsNullOrEmpty(selectedLanguage))

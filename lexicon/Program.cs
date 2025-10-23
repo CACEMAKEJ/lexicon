@@ -15,18 +15,15 @@ var mongoUri = Environment.GetEnvironmentVariable("MONGO_DB_URI");
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped<DetectLanguageService>(sp =>
-{
+builder.Services.AddScoped<DetectLanguageService>(sp => {
     return new DetectLanguageService(apiKey);
 });
 
-builder.Services.AddSingleton<ITranslationRepo>(sp =>
-{
+builder.Services.AddSingleton<ITranslationRepo>(sp => {
     return new MongoTranslationRepo(mongoUri);
 });
 
-builder.Services.AddScoped<TranslationService>(sp =>
-{
+builder.Services.AddScoped<TranslationService>(sp => {
     var repo = sp.GetRequiredService<ITranslationRepo>();
     return new TranslationService(repo);
 });

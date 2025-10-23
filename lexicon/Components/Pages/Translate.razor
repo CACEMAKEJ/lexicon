@@ -23,8 +23,7 @@
         </button>
     </div>
   
-    @if (!string.IsNullOrEmpty(detectionResult) || !string.IsNullOrEmpty(translationResult))
-    {
+    @if (!string.IsNullOrEmpty(detectionResult) || !string.IsNullOrEmpty(translationResult)) {
         <div class="mt-5 p-4" style="background-color:#2f3542; border-radius:14px; border:1px solid #3f4654; color:white; box-shadow:0 4px 14px rgba(0,0,0,0.4);">
             <div class="mb-3 text-white font-semibold">
                 @detectionResult
@@ -52,10 +51,8 @@
     private string? detectionResult;  
     private string? translationResult; 
     
-    private async Task DetectAndTranslate()
-    {
-        if (string.IsNullOrWhiteSpace(inputText))
-        {
+    private async Task DetectAndTranslate() {
+        if (string.IsNullOrWhiteSpace(inputText)) {
             detectionResult = "Please enter text to translate.";
             translationResult = "";
             StateHasChanged();
